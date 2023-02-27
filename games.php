@@ -41,6 +41,23 @@
 
             return $returnValue;
         }
+        function getGameResult(){
+            include "connection.php";
+
+            $sql = "SELECT * FROM tblgames ORDER BY game_rate DESC";
+
+            $stmt = $conn->prepare($sql);
+            $returnValue = 0;
+
+            if($stmt->execute()){
+                if($stmt->rowCount() > 0){
+                    $rs = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    $returnValue = json_encode($rs);
+                }
+            }
+            return $returnValue;
+        }
+
 
     }
 
@@ -55,6 +72,9 @@
             break;
         case "selectGame":
             echo $user->selectGame($json);
+            break;
+        case "getGameResult":
+            echo $user->getGameResult();
             break;
     }
 ?>

@@ -8,13 +8,11 @@
             $json = json_decode($json, true);
 
             $schoolId = $json["schoolId"];
-            $password = $json["password"];
 
-            $sql = "SELECT * FROM tblstudents WHERE stud_schoolId=:schoolId AND stud_password=:password";
+            $sql = "SELECT * FROM tblstudents WHERE stud_schoolId=:schoolId";
 
             $stmt = $conn->prepare($sql);
             $stmt->bindParam(":schoolId", $schoolId);
-            $stmt->bindParam(":password", $password);
 
             $returnValue = 0;
 
@@ -30,22 +28,20 @@
 
         function signup($json){
 
-            // {"schoolId":"123","password":"kobi123"}
+            // {"schoolId":"123"}
 
             include "connection.php";
 
             $json = json_decode($json, true);
 
             $schoolId = $json["schoolId"];
-            $password = $json["password"];
 
-            $sql = "INSERT INTO tblstudents(stud_schoolId, stud_password) ";
-            $sql .= "VALUES(:schoolId, :password)";
+            $sql = "INSERT INTO tblstudents(stud_schoolId) ";
+            $sql .= "VALUES(:schoolId)";
 
             $stmt = $conn->prepare($sql);
 
             $stmt->bindParam(":schoolId", $schoolId);
-            $stmt->bindParam(":password", $password);
 
             $returnValue = 0;
 
@@ -57,9 +53,7 @@
 
             return $returnValue;
         }
-
         
- 
     }
 
     $json = isset($_POST["json"]) ? $_POST["json"] : "0";
