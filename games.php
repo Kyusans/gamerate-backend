@@ -89,9 +89,7 @@
                     $stmt2->bindParam(":gameId", $gameId);
 
                     $stmt2->execute();
-                    if($stmt2->rowCount() > 0){
-                        $returnValue = 1;
-                    }
+                    $returnValue = 1;
                 }
             }
 
