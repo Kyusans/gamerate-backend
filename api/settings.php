@@ -8,7 +8,7 @@ class Settings {
   function getRatingStatus(){
     include "connection.php";
 
-    $sql = "SELECT * FROM tblsettings WHERE set_key = 'rating'";
+    $sql = "SELECT * FROM tblsettings WHERE set_key = 'status'";
     $stmt = $conn->prepare($sql);
     $stmt->execute();
     $returnValue = $stmt->rowCount() > 0 ? $stmt->fetch(PDO::FETCH_ASSOC)['set_value'] : 0;
@@ -22,7 +22,7 @@ class Settings {
     $json = json_decode($json, true);
   
     $sql = "UPDATE tblsettings SET set_value = :status ";
-    $sql .= "WHERE set_key = 'rating'";
+    $sql .= "WHERE set_key = 'status'";
     $stmt = $conn->prepare($sql);
     $stmt->bindParam(":status", $json['status']);
     $stmt->execute();

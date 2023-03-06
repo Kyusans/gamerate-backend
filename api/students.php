@@ -1,5 +1,7 @@
 <?php 
-    include "headers.php";
+    // include "headers.php";
+    header('Content-Type: application/json');
+    header("Access-Control-Allow-Origin: *");
 
     class User{
         function login($json){
@@ -7,7 +9,7 @@
             // {"schoolId":"123"}
             $json = json_decode($json, true);
             $schoolId = $json["schoolId"];
-            $sql = "SELECT * FROM tblstudents WHERE stud_schoolId=:schoolId AND stud_active = 1";
+            $sql = "SELECT * FROM tblstudents WHERE stud_schoolId=:schoolId ";// AND stud_active = 1";
             $stmt = $conn->prepare($sql);
             $stmt->bindParam(":schoolId", $schoolId);
 
@@ -21,20 +23,8 @@
             }
             return $returnValue;
         }
-
-        function getInactiveStudents(){
-            include "connection.php";
-           
-            $sql = "SELECT * FROM tblstudents WHERE stud_active = 0 ORDER BY stud_name";
-            $stmt = $conn->prepare($sql);
-            $stmt->execute();
-            $returnValue=$stmt->rowCount() > 0 ? $stmt->fetchAll(PDO::FETCH_ASSOC) : 0;
-            $stmt = null;
-            $conn = null;
-            return json_encode($returnValue);
-          }
       
-          function register($json){
+        function register($json){
             include "connection.php";
             //{"nickName":"Pitok","schoolId":"02-1617-05810","name":"Pitok Batolata", "course":"BSIT"}
             $json = json_decode($json, true);
@@ -55,32 +45,17 @@
             $stmt = null;
             $conn = null;
             return $returnValue;      
-          }
+        }
       
-          function activate($json){
-            include "connection.php";
-            //{"studId":1}
-            $json = json_decode($json, true);
-          
-            $sql = "UPDATE tblstudents SET stud_active = 1 ";
-            $sql .= "WHERE stud_id = :studId";
-            $stmt = $conn->prepare($sql);
-            $stmt->bindParam(":studId", $json['studId']);
-            $stmt->execute();
-            $returnValue = $stmt->rowCount() > 0 ? 1 : 0;
-            $stmt = null; $conn = null;
-            return $returnValue;
-          }
-      
-          function schoolIdExist($schoolId, $myConn){
+        function schoolIdExist($schoolId, $myConn){
             $sql = "SELECT stud_id FROM tblstudents WHERE stud_schoolId = :schoolId";
             $stmt = $myConn->prepare($sql);
             $stmt->bindParam(":schoolId", $schoolId);
             $stmt->execute();
             $returnValue = $stmt->rowCount() > 0 ? true : false;
             return $returnValue;
-          }
-
+        }
+  
         function addNickName($json){
             // {"schoolId":"02-1617-05810", "nickName":"Joe"}
             include "connection.php";
@@ -101,7 +76,6 @@
                     $returnValue = 1;
                 }
             }
-
             return $returnValue;
         }
     }
@@ -118,14 +92,8 @@
         case "addNickName":
             echo $user->addNickName($json);
             break;
-        case "activate":
-            echo $user->activate($json);
-            break;
         case "register":
             echo $user->register($json);
-            break;
-        case "getInactiveStudents":
-            echo $user->getInactiveStudents();
             break;
     }
 ?>

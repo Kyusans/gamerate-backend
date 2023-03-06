@@ -1,6 +1,8 @@
 <?php 
-    include "headers.php";
-
+    //include "headers.php";
+    header('Content-Type: application/json');
+    header("Access-Control-Allow-Origin: *");
+    
     class User{
         function getGames(){
             include "connection.php";

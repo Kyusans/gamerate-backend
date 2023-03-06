@@ -19,14 +19,14 @@
 
     function saveShoutOut($json){
       include "connection.php";
-      //{"nickName":"Pitok","schoolId":"02-1617-05810","shoutOut":"Hello World!"}
+      //{"nickName":"Pitok","schoolId":"02-1617-05810","shoutOut":"World Hello!"}
       $json = json_decode($json, true);
       $sql = "INSERT INTO tblshoutout(sh_schoolId, sh_nickName, sh_shoutOut) ";
       $sql .= "VALUES(:schoolId, :nickName, :shoutOut)";
       $stmt = $conn->prepare($sql);
+      $stmt->bindParam(":schoolId", $json["schoolId"]);
       $stmt->bindParam(":nickName", $json["nickName"]);
       $stmt->bindParam(":shoutOut", $json["shoutOut"]);
-      $stmt->bindParam(":schoolId", $json["schoolId"]);
       $stmt->execute();
       $returnValue = $stmt->rowCount() > 0 ? 1 : 0;
       $stmt = null;
