@@ -6,12 +6,9 @@
     class User{
         function getGames(){
             include "connection.php";
-
             $sql = "SELECT * FROM tblgames ORDER BY RAND()";
-
             $stmt = $conn->prepare($sql);
             $returnValue = 0;
-
             if($stmt->execute()){
                 if($stmt->rowCount() > 0){
                     $rs = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -23,17 +20,12 @@
 
         function selectGame($json){
             include "connection.php";
-
             $json = json_decode($json, true);
             $gameId = $json["gameId"];
-
             $sql = "SELECT * FROM tblgames WHERE game_id=:gameId";
-
             $stmt = $conn->prepare($sql);
             $stmt->bindParam(":gameId", $gameId);
-
             $returnValue = 0;
-
             if($stmt->execute()){
                 if($stmt->rowCount() > 0){
                     $rs = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -46,18 +38,14 @@
 
         function getGameResult(){
             include "connection.php";
-
             // $sql = "SELECT * FROM tblgames ORDER BY game_stars DESC";
-
-            $sql = "SELECT a.game_id, a.game_name, a.game_letter, sum(b.rate_rating) as totalStars ";
+            $sql = "SELECT a.game_id, a.game_name, a.game_letter, a.game_status, sum(b.rate_rating) as totalStars ";
             $sql .= "FROM tblgames a LEFT JOIN tblrating b ";
             $sql .= "ON a.game_id = b.rate_gameId ";
             $sql .= "GROUP BY a.game_name, a.game_letter, a.game_id ";
             $sql .= "ORDER BY totalStars DESC";
-
             $stmt = $conn->prepare($sql);
             $returnValue = 0;
-
             if($stmt->execute()){
                 if($stmt->rowCount() > 0){
                     $rs = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -78,9 +66,9 @@
             $schoolId = $json["schoolId"];
             $stars = $json["stars"];
 
-            if ($this->hasRated($schoolId, $gameId, $conn)){
-                return 3;
-            }
+            // if ($this->hasRated($schoolId, $gameId, $conn)){
+            //     return 3;
+            // }
 
             $sql = "INSERT INTO tblrating(rate_gameId, rate_schoolId, rate_rating) ";
             $sql .= "VALUES(:gameId, :schoolId, :stars)";

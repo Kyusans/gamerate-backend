@@ -54,6 +54,16 @@
             $conn = null;
             return json_encode($returnValue);
         }
+        function revealGame($json){
+            include "connection.php";
+            $json = json_decode($json, true);
+            $sql = "UPDATE tblgames SET game_status = :status WHERE game_id = :gameId";
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam(':status', $json["status"]);
+            $stmt->bindParam(':gameId', $json["gameId"]);
+            $stmt->execute();            
+            return $stmt->rowCount() > 0 ? 1 : 0;
+        }
     }
 
     $json = isset($_POST["json"]) ? $_POST["json"] : "0";
@@ -70,6 +80,9 @@
             break;
         case "getInactiveStudents":
             echo $user->getInactiveStudents();
+            break;
+        case "revealGame":
+            echo $user->revealGame($json);
             break;
     }
 ?>
